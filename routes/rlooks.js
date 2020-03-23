@@ -15,4 +15,9 @@ module.exports = function(app) {
         res.send(respuesta);
     });
 
+    app.post("/look", function (req,res) {
+        res.send("Look agregado: " + req.body.nombre +"<br>"
+        + "Temporada: " + req.body.genero);
+    })
+
 };
