@@ -7,8 +7,12 @@ module.exports = function(app, swig,  gestorBD) {
         res.send(respuesta);
     });
 
-    app.get("/looks", function(req, res) {
-        gestorBD.obtenerLooks( function(looks) {
+    app.get("/tienda", function(req, res) {
+        let criterio = {};
+        if( req.query.busqueda != null ){
+            criterio = { "nombre" : {$regex : ".*"+req.query.busqueda+".*"} };
+        }
+        gestorBD.obtenerLooks(criterio, function(looks) {
             if (looks == null) {
                 res.send("Error al listar ");
             } else {
@@ -26,10 +30,25 @@ module.exports = function(app, swig,  gestorBD) {
         res.send(respuesta);
     });
 
+    app.get('/look/:id', function (req, res) {
+        let criterio = { "_id" :  gestorBD.mongo.ObjectID(req.params.id)     };
+        gestorBD.obtenerLooks(criterio,function(looks){
+            if ( looks == null ){
+                res.send(respuesta);
+            } else {
+                let respuesta = swig.renderFile('views/blook.html',
+                    {
+                        look : looks[0]
+                    });
+                res.send(respuesta);
+            }
+        });
+    });
+
     app.post("/look", function (req,res) {
         let look = { nombre: req.body.nombre,
                         genero: req.body.genero,
-                        decripcion: req.body.descripcion
+                        descripcion: req.body.descripcion
         }
         // Conectarse
         gestorBD.insertarLook(look, function(id){

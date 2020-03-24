@@ -5,13 +5,13 @@ module.exports = {
         this.mongo = mongo;
         this.app = app;
     },
-    obtenerLooks : function(funcionCallback){
+    obtenerLooks : function(criterio, funcionCallback){
         this.mongo.MongoClient.connect(this.app.get('db'), function(err, db) {
             if (err) {
                 funcionCallback(null);
             } else {
                 let collection = db.collection('looks');
-                collection.find().toArray(function(err, looks) {
+                collection.find(criterio).toArray(function(err, looks) {
                     if (err) {
                         funcionCallback(null);
                     } else {
