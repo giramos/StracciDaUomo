@@ -1,4 +1,4 @@
-module.exports = function(app, swig, mongo) {
+module.exports = function(app, swig,  gestorBD) {
 
     app.get('/looks/agregar', function (req, res) {
         let respuesta = swig.renderFile('views/bagregar.html', {
@@ -8,18 +8,17 @@ module.exports = function(app, swig, mongo) {
     });
 
     app.get("/looks", function(req, res) {
-        let looks = [ {
-            "nombre" : "look1",
-            "descripcion" : "Camisa azul, dockers gris, stan smith"
-        }, {
-            "nombre" : "look2",
-            "descripcion" : "Jersey azul marino, dockers beige, Nb"
-        } ];
-        let respuesta = swig.renderFile('views/btienda.html' , {
-            vendedor: 'Looks de hombre' ,
-            looks: looks
+        gestorBD.obtenerLooks( function(looks) {
+            if (looks == null) {
+                res.send("Error al listar ");
+            } else {
+                let respuesta = swig.renderFile('views/btienda.html',
+                    {
+                        looks : looks
+                    });
+                res.send(respuesta);
+            }
         });
-        res.send(respuesta);
     });
 
     app.get('/looks/:id', function(req, res) {
@@ -33,19 +32,21 @@ module.exports = function(app, swig, mongo) {
                         decripcion: req.body.descripcion
         }
         // Conectarse
-        mongo.MongoClient.connect(app.get('db'), function(err, db) {
-            if (err) {
-                res.send("Error de conexión: " + err);
+        gestorBD.insertarLook(look, function(id){
+            if (id == null) {
+                res.send("Error al insertar el look");
             } else {
-                let collection = db.collection('looks');
-                collection.insert(look, function(err, result) {
-                    if (err) {
-                        res.send("Error al insertar " + err);
-                    } else {
-                        res.send("Agregada id: "+ result.ops[0]._id);
-                    }
-                    db.close();
-                });
+                if (req.files.portada != null) {
+                    let imagen = req.files.portada;
+                    imagen.mv('public/portadas/' + id + '.jpg', function(err) {
+                        if (err) {
+                            res.send("Error al subir la portada");
+                        } else {
+                            res.send("Agregada id: " + id);
+                        }
+                    });
+                }
+
             }
         });
 

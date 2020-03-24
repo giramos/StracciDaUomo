@@ -4,7 +4,7 @@
 <!-- Búsqueda -->
 <div class="row">
     <div id="custom-search-input ">
-        <form method="get" action="/tienda" >
+        <form method="get" action="/tienda">
             <div
                     class="input-group col-xs-8 col-sm-6 col-md-4 col-lg-5 pull-right">
                 <input type="text" class="search-query form-control"
@@ -25,10 +25,10 @@
     {% for look in looks %}
     <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
         <div style="width: 200px">
-            <a href="/look/id"> <img src="img/cancion1.png" alt="logo" />
+            <a href="/look/id"> <img src="/portadas/{{ look._id.toString() }}.jpg" alt="logo"/>
                 <!-- http://www.socicon.com/generator.php -->
                 <div class="wrap">{{ look.nombre }}</div>
-                <div class="small">{{ look.descripcion }}</div>
+                <div class="text-right">{{ look.descripcion }}</div>
             </a>
         </div>
     </div>
