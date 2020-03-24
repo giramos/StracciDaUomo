@@ -1,12 +1,24 @@
-module.exports = function(app) {
+module.exports = function(app, swig) {
+
+    app.get('/looks/agregar', function (req, res) {
+        let respuesta = swig.renderFile('views/bagregar.html', {
+
+        });
+        res.send(respuesta);
+    });
+
     app.get("/looks", function(req, res) {
-        let respuesta = "";
-        if (req.query.nombre != null)
-            respuesta += 'Nombre: ' + req.query.nombre + '<br>';
-
-        if (typeof (req.query.descripcion) != "undefined")
-            respuesta += 'Descripcion: ' + req.query.descripcion;
-
+        let looks = [ {
+            "nombre" : "look1",
+            "descripcion" : "Camisa azul, dockers gris, stan smith"
+        }, {
+            "nombre" : "look2",
+            "descripcion" : "Jersey azul marino, dockers beige, Nb"
+        } ];
+        let respuesta = swig.renderFile('views/btienda.html' , {
+            vendedor: 'Looks de hombre' ,
+            looks: looks
+        });
         res.send(respuesta);
     });
 
@@ -17,7 +29,8 @@ module.exports = function(app) {
 
     app.post("/look", function (req,res) {
         res.send("Look agregado: " + req.body.nombre +"<br>"
-        + "Temporada: " + req.body.genero);
+        + "Temporada: " + req.body.genero + "<br>"
+        + "Descipcion: " + req.body.descripcion);
     })
 
 };

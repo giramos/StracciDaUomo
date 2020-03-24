@@ -1,0 +1,15 @@
+<html>
+<head>
+    <title>Looks</title>
+</head>
+<body>
+<h1>{{ vendedor }}</h1>
+<ul>
+    {% for look in looks %}
+    <li>
+        {{ look.nombre }} - {{ look.descripcion }}
+    </li>
+    {% endfor %}
+</ul>
+</body>
+</html>

@@ -2,6 +2,9 @@
 var express =  require('express');
 var app = express();
 
+// Módulo swig
+let swig = require('swig');
+
 // Módulo body-parser: POST en formularios
 let bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -13,8 +16,8 @@ app.use(express.static('public'));
 app.set('port', 8081);
 
 //Rutas/controladores por lógica
-require("./routes/rusuarios.js")(app); // (app, param1, param2, etc.)
-require("./routes/rlooks.js")(app); // (app, param1, param2, etc.)
+require("./routes/rusuarios.js")(app, swig); // (app, param1, param2, etc.)
+require("./routes/rlooks.js")(app, swig);  // (app, param1, param2, etc.)
 
 
 // lanzar el servidor
